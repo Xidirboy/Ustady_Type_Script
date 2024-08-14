@@ -1,6 +1,7 @@
 {
   "translations": {
     "site_name": "react_app",
+    "test": "test en",
     "home": {
       "title": "Home"
     }

@@ -1,6 +1,6 @@
 import axios from "axios"; 
-import { API_URL } from "./api";
-import { removeToken } from "./tokenStorge";
+import { API_URL } from "./api.tsx";
+import { removeToken } from "./tokenStorge.tsx";
 
 axios.interceptors.request.use(
   (config) => config,

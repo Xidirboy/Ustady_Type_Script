@@ -1,10 +1,10 @@
 import React, { Suspense, lazy } from "react";
-import { Outlet, Route, Routes } from "react-router-dom"; 
-import Layout from "../sections/layoutSections/Layout";
+import { Outlet, Route, Routes } from "react-router-dom";
+import Layout from "../sections/layoutSections/Layout.tsx";
 
-const Home = lazy(() => import("../components/main_pages/Home"));
-const Profile = lazy(() => import("../components/profile_pages/Profile"));
-const NotFount = lazy(() => import("../components/main_pages/NotFount"));
+const Home = lazy(() => import("../components/main_pages/Home.tsx"));
+const Profile = lazy(() => import("../components/profile_pages/Profile.tsx"));
+const NotFount = lazy(() => import("../components/main_pages/NotFount.tsx"));
 
 const Routers = () => {
   return (
