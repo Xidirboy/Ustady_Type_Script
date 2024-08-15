@@ -15,24 +15,28 @@ interface CourseItem {
 const Header: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [data, setData] = useState<CourseItem[]>([]);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const burgerRef = useRef<HTMLDivElement | null>(null);
 
-  useEffect(() => {
-    axios
-      .get("https://ustudy.201.uz/uz/api/v1/course/courses/")
-      .then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("Xatolik:", error);
-      });
-  }, []);
+  const fetchCourses = async (setData, setLoading) => {
+    try {
+      const response = await axios.get(
+        "https://ustudy.201.uz/uz/api/v1/course/courses/"
+      );
+      setData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("xatolik:", error);
+    } finally {
+      setTimeout(() => setLoading(false), 3000);
+    }
+  };
 
   useEffect(() => {
+    fetchCourses(setData, setLoading);
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 0);
     };
@@ -64,15 +68,19 @@ const Header: React.FC = () => {
 
   return (
     <>
-      <div
+      <header
         className={`sm:px-[70px] px-[35px] fixed top-0 w-full z-9999 transition duration-500 ${
           isScrolled ? ` bg-[#09213c6e]` : "bg-transparent"
         }`}
       >
-        <div className="flex justify-between items-center py-[15px]">
+        <nav className="flex justify-between items-center py-[15px]">
           <a href="http://localhost:3000/" className="flex gap-5 items-center">
             <div>
-              <img className="w-[50px] h-[35px]" src="/images/img/logo_1.png" alt="Logo" />
+              <img
+                className="w-[50px] h-[35px]"
+                src="/images/img/logo_1.png"
+                alt="Logo"
+              />
             </div>
             <span className="w-[1px] h-[50px] bg-[#FFFFFFCC]"></span>
             <div>
@@ -93,28 +101,40 @@ const Header: React.FC = () => {
             </button>
           </div>
 
-          <div className="hidden lg:flex flex-1 justify-center gap-[30px]">
-            <a href="#kurs" className="group">
-              <div className="text-[14px] group-hover:text-[#4EAE32] font-bold text-[#FFFFFFCC] leading-[17.33px]">
+          <li className="hidden lg:flex flex-1 justify-center gap-[30px]">
+            <ul className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]">
+              <a
+                href="#kurs"
+                className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]"
+              >
                 Kurslar
-              </div>
-            </a>
-            <a href="#biz_haqimizda" className="group">
-              <div className="text-[14px] group-hover:text-[#4EAE32] font-bold text-[#FFFFFFCC] leading-[17.33px]">
-                Biz haqimizda
-              </div>
-            </a>
-            <a href="#maslahat" className="group">
-              <div className="text-[14px] font-bold group-hover:text-[#4EAE32] text-[#FFFFFFCC] leading-[17.33px]">
+              </a>
+            </ul>
+            <ul className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]">
+              <a
+                href="#kurs"
+                className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]"
+              >
+                Biz Haqimizda
+              </a>
+            </ul>
+            <ul className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]">
+              <a
+                href="#maslahat"
+                className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]"
+              >
                 Maslahat
-              </div>
-            </a>
-            <a href="#kontaktlar" className="group">
-              <div className="text-[14px] font-bold group-hover:text-[#4EAE32] text-[#FFFFFFCC] leading-[17.33px]">
+              </a>
+            </ul>
+            <ul className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]">
+              <a
+                href="#kontaktlar"
+                className="text-[14px] group-hover:text-[#4EAE32] font-bold !text-[#FFFFFFCC] leading-[17.33px]"
+              >
                 Kontaktlar
-              </div>
-            </a>
-          </div>
+              </a>
+            </ul>
+          </li>
 
           <div className="hidden lg:flex items-center gap-4">
             <LanguageSwitcher />
@@ -132,7 +152,7 @@ const Header: React.FC = () => {
               />
             </button>
           </div>
-        </div>
+        </nav>
 
         <div
           ref={menuRef}
@@ -179,7 +199,7 @@ const Header: React.FC = () => {
             </button> */}
           </div>
         </div>
-      </div>
+      </header>
 
       <div
         ref={burgerRef}
@@ -190,13 +210,19 @@ const Header: React.FC = () => {
         <div className="p-2">
           <div className="flex items-center justify-between p-4 border-b border-[#FFFFFFCC]">
             <div className="text-lg cursor-pointer font-bold">Yopish</div>
-            <button aria-label="Menyu yopish" onClick={() => setIsMenuOpen(false)}>
+            <button
+              aria-label="Menyu yopish"
+              onClick={() => setIsMenuOpen(false)}
+            >
               <IoClose className="w-6 h-6" />
             </button>
           </div>
           <div className="p-4 flex flex-col gap-4">
             {data.map((item, index) => (
-              <div key={index} className="rounded-lg mt-[20px] bg-[#37344740] p-6 hover:bg-[#4EAE32] transition-colors cursor-pointer">
+              <div
+                key={index}
+                className="rounded-lg mt-[20px] bg-[#37344740] p-6 hover:bg-[#4EAE32] transition-colors cursor-pointer"
+              >
                 <div className="flex gap-[20px]">
                   <img className="w-5 h-5" src={item.icon} alt="eqw" />
                   <h1 className="font-semibold text-white text-[18px] leading-[24.3px]">

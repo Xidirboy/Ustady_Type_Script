@@ -16,22 +16,23 @@ interface CourseItem {
 const Main = () => {
   const [data, setData] = useState<CourseItem[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  // const dispatch = useDispatch();
+
+  const fetchCourses = async (setData, setLoading) => {
+    try {
+      const response = await axios.get(
+        "https://ustudy.201.uz/uz/api/v1/course/courses/"
+      );
+      setData(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("xatolik:", error);
+    } finally {
+      setTimeout(() => setLoading(false), 3000);
+    }
+  };
+
   useEffect(() => {
-    // dispatch({ type: "SET_LOADING", payload: true });
-    axios
-      .get("https://ustudy.201.uz/uz/api/v1/course/courses/")
-      .then((response) => {
-        setData(response.data);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.error("xatolik:", error);
-      })
-      .finally(() => {
-        setTimeout(() => setLoading(false), 3000);
-        // dispatch({ type: "SET_LOADING", payload: false });
-      });
+    fetchCourses(setData, setLoading);
   }, []);
 
   return (
